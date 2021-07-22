@@ -44,6 +44,12 @@ ${section.raw ?? ''}`;
   }
 
   private static writeValue(value: Value): string {
-    return typeof value.value === 'number' || value.isPointer ? `${value.value}` : `"${value.value}"`;
+    return value.isPointer
+      ? (value.value as string)
+      : value.isFloat
+      ? value.value.toLocaleString(undefined, { useGrouping: false, minimumFractionDigits: 9 })
+      : typeof value.value === 'number'
+      ? `${value.value}`
+      : `"${value.value}"`;
   }
 }

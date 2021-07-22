@@ -20,7 +20,7 @@ describe(Writer.name, () => {
         await fs.promises.mkdir(path.join(__dirname, '..', 'dump'), { recursive: true });
         // eslint-disable-next-line security/detect-non-literal-fs-filename
         await fs.promises.writeFile(path.join(__dirname, '..', 'dump', t.file), written, { encoding: 'latin1' });
-        expect(written).equals(tmt);
+        expect(written.trim()).equals(tmt.trim().replace(/ ;/g, ';'));
       })
     );
   });
