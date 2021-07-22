@@ -100,7 +100,7 @@ export class Reader {
     }
     if (this.parser.token?.type === 'number') {
       if (this.parser.token.text.includes('p')) {
-        return { whitespace: this.parser.token.whitespace, value: this.parser.token.text };
+        return { whitespace: this.parser.token.whitespace, value: this.parser.token.text, isPointer: true };
       }
       return { whitespace: this.parser.token.whitespace, value: +this.parser.token.text };
     }
