@@ -8,7 +8,7 @@ import { TokenType } from './Token';
 export class Reader {
   private parser: Parser;
 
-  public constructor(source: string) {
+  public constructor(source: string, private rawSections = Constants.RawSections) {
     this.parser = new Parser(source);
   }
 
@@ -39,14 +39,14 @@ export class Reader {
     return this;
   }
 
-  public readGeneric(rawSections: string[] = Constants.RawSections): Reader {
+  public readGeneric(): Reader {
     while (this.parser.read() && !this.isToken('name', Constants.EndOfFile)) {
-      this.readDomain(rawSections);
+      this.readDomain();
     }
     return this;
   }
 
-  public readDomain(rawSections: string[] = Constants.RawSections): Reader {
+  public readDomain(): Reader {
     this.assert('name', Constants.Domain);
     const name = this.readExpected('name');
     this.readExpected('brace', Constants.OpeningBrace);
@@ -56,7 +56,7 @@ export class Reader {
     const sections: Section[] = [];
     while (this.parser.token?.type === 'section') {
       const section = this.parser.token.text;
-      if (rawSections.includes(section)) {
+      if (this.rawSections.includes(section)) {
         const raw = this.parser.readRaw();
         sections.push({ name: section, raw });
         this.parser.read();
