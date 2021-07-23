@@ -1,8 +1,6 @@
-# nc-format
+# tmt-format
 
-This is a typescript library to read the TRUMPF LST file format.
-
-It comes with a plain class model of the LST file structure and a persistency layer to read this model from a string.
+This is a typescript library to read the TRUMPF TMT file format.
 
 ## Usage
 
