@@ -1,7 +1,7 @@
 {
   "name": "@scalenc/tmt-format",
   "version": "0.0.0-development",
-  "description": "Library for handling TRUMPF LST file format.",
+  "description": "Library for handling TRUMPF TMT file format.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
