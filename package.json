@@ -11,9 +11,6 @@
     "build": "tsc",
     "prepublish": "tsc"
   },
-  "dependencies": {
-    "reflect-metadata": "^0.1.13"
-  },
   "devDependencies": {
     "@types/chai": "^4.2.21",
     "@types/mocha": "^8.2.3",
