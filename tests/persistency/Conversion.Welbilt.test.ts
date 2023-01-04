@@ -87,7 +87,12 @@ describe('Conversion for Welbilt TMTs for TC6000L to K08', () => {
       domains.forEach((d, i) => {
         const replacement = domainsToOverwrite.find((o) => o.name === d.name);
         if (replacement) {
-          domains[i] = replacement;
+          domains[i].sections.forEach((s, j) => {
+            const replacementSection = replacement.sections.find((rs) => rs.name === s.name);
+            if (replacementSection) {
+              domains[i].sections[j] = replacementSection;
+            }
+          });
         }
       });
 
