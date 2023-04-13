@@ -1,3 +1,6 @@
+// Note, SOCKELSTAPELGUT contains a GEO file! T2_MN_BER_SCX contains comment
+export const defaultRawSections = ['DB_GEO', 'PROZESS_PARAMETER', 'SCRAP_AREA_GEO', 'SOCKELSTAPELGUT', 'T2_MN_BER_SCX'];
+
 export const Constants = {
   WhiteSpace: /\s/,
   NumberStart: /[-+0-9]/,
@@ -11,6 +14,6 @@ export const Constants = {
   StringDelimiter: '"',
   Domain: 'bereich',
   Header: 'Kopf',
-  RawSections: ['DB_GEO', 'PROZESS_PARAMETER'],
+  RawSections: defaultRawSections,
   EndOfFile: 'end_of_file',
 };
