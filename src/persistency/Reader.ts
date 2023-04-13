@@ -29,10 +29,12 @@ export class Reader {
     const date = this.readExpected('number');
     const version = this.readExpected('name');
     const format = this.readExpected('string');
-    const measuringSystem = this.readExpected('string');
-    const application = this.readExpected('string');
 
-    this.readExpected('brace', Constants.ClosingBrace);
+    this.parser.read();
+    const measuringSystem = this.skipOptional('string');
+    const application = this.skipOptional('string');
+
+    this.assert('brace', Constants.ClosingBrace);
     this.readExpected('semicolon', Constants.Semicolon);
 
     this.header = { name, date, version, format, measuringSystem, application };
@@ -87,6 +89,15 @@ export class Reader {
       }
     }
     return values;
+  }
+
+  private skipOptional(type: TokenType, text?: string): string | undefined {
+    if (this.parser.token?.type === type && (text === undefined || text === this.parser.token.text)) {
+      const text = this.parser.token.text;
+      this.parser.read();
+      return text;
+    }
+    return undefined;
   }
 
   private readExpected(type: TokenType, text?: string): string {

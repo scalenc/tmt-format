@@ -3,6 +3,6 @@ export interface Header {
   date: string;
   version: string;
   format: string;
-  measuringSystem: string;
-  application: string;
+  measuringSystem?: string;
+  application?: string;
 }
