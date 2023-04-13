@@ -14,8 +14,8 @@ export class Writer {
 ${header.date}
 ${header.version}
 "${header.format}"
-"${header.measuringSystem}"
-"${header.application}"
+${header.measuringSystem === undefined ? '' : `"${header.measuringSystem}"`}
+${header.application === undefined ? '' : `"${header.application}"`}
 };
 `;
   }
@@ -47,7 +47,7 @@ ${section.raw ?? ''}`;
     return value.isPointer
       ? (value.value as string)
       : value.isFloat
-      ? value.value.toLocaleString(undefined, { useGrouping: false, minimumFractionDigits: 9 })
+      ? value.value.toLocaleString('en-US', { useGrouping: false, minimumFractionDigits: 9 })
       : typeof value.value === 'number'
       ? `${value.value}`
       : `"${value.value}"`;
