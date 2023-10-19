@@ -1,5 +1,5 @@
 // Note, SOCKELSTAPELGUT contains a GEO file! T2_MN_BER_SCX contains comment
-export const defaultRawSections = ['DB_GEO', 'PROZESS_PARAMETER', 'SCRAP_AREA_GEO', 'SOCKELSTAPELGUT', 'T2_MN_BER_SCX'];
+export const defaultRawSections = ['DB_GEO', 'PROZESS_PARAMETER', 'SCRAP_AREA_GEO', 'SOCKELSTAPELGUT', 'T2_MN_BER_SCX', 'T1_REMAINDER_SHEETS'];
 
 export const Constants = {
   WhiteSpace: /\s/,
