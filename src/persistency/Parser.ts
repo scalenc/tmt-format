@@ -34,7 +34,7 @@ export class Parser {
   }
 
   public read(): boolean {
-    const whitespace = this.readWhile(Constants.WhiteSpace);
+    const whitespace = this.readWhitespaces();
     switch (this.char) {
       case null:
       case undefined:
@@ -66,9 +66,19 @@ export class Parser {
         this.readNextChar();
         return true;
 
+      case Constants.RawStart: {
+        const line = this.readLine();
+        if (line.trim().startsWith(Constants.GeoStart)) {
+          this.token = { whitespace, type: 'geo', text: line + this.readLinesUntil(Constants.GeoEnd) };
+        } else {
+          this.token = { whitespace, type: 'raw', text: line + this.readLinesUntil(line.trim() + Constants.RawEndPostfix) };
+        }
+        return true;
+      }
+
       default:
         if (Constants.NumberStart.test(this.char)) {
-          this.token = { whitespace, type: 'number', text: this.readWhile(Constants.NumberChar) };
+          this.token = { whitespace, type: 'number', text: this.readWhile(Constants.NumberChar, true) };
           return true;
         } else {
           this.token = { whitespace, type: 'name', text: this.readWhile(Constants.NameChar) };
@@ -78,8 +88,24 @@ export class Parser {
     }
   }
 
-  private readWhile(pattern: RegExp): string {
+  private readLinesUntil(endLine: string): string {
     const i0 = this.pos;
+    while (this.char) {
+      const line = this.readLine().trim();
+      if (line === endLine) return this.source.substring(i0, this.pos);
+    }
+    throw this.makeError(`Expected end of GEO content but found end of file`);
+  }
+
+  private readLine(): string {
+    const iLine = this.pos;
+    this.skipLine();
+    return this.source.substring(iLine, this.pos);
+  }
+
+  private readWhile(pattern: RegExp, skipFirst?: boolean): string {
+    const i0 = this.pos;
+    if (skipFirst) this.readNextChar();
     while (this.char && pattern.test(this.char)) {
       this.readNextChar();
     }
@@ -99,6 +125,31 @@ export class Parser {
       this.readNextChar();
     }
     this.readNextChar();
+  }
+
+  private readWhitespaces(): string {
+    const i0 = this.pos;
+    while (this.char && (Constants.WhiteSpace.test(this.char) || this.skipComment())) {
+      this.readNextChar();
+    }
+    return this.source.substring(i0, this.pos);
+  }
+
+  private skipComment(): boolean {
+    if (this.char === Constants.CommentStart[0] && this.source[this.pos + 1] === Constants.CommentStart[1]) {
+      this.readNextChar();
+      this.readNextChar();
+      while (this.char) {
+        if (this.char === Constants.CommentEnd[0] && this.source[this.pos + 1] === Constants.CommentEnd[1]) {
+          this.readNextChar();
+          // this.readNextChar(); is being called by caller readWhitespaces()
+          return true;
+        }
+        this.readNextChar();
+      }
+      throw this.makeError(`Expected end of comment but found end of file`);
+    }
+    return false;
   }
 
   private readNextChar(): void {
@@ -125,8 +176,10 @@ export class Parser {
   }
 
   private assert(condition: boolean, message: string) {
-    if (!condition) {
-      throw new Error(`In line ${this.lineNumber}: ${message}`);
-    }
+    if (!condition) throw this.makeError(message);
+  }
+
+  private makeError(message: string): Error {
+    return new Error(`In line ${this.lineNumber}: ${message}`);
   }
 }

@@ -68,10 +68,11 @@ export class Reader {
       }
     }
 
+    const endWhitespaces = this.parser.token?.whitespace?.trim() ? this.parser.token.whitespace : undefined;
     this.assert('brace', Constants.ClosingBrace);
     this.readExpected('semicolon', Constants.Semicolon);
 
-    (this.domains ?? (this.domains = [])).push({ name, sections, values: domainValues.length ? domainValues : undefined });
+    (this.domains ?? (this.domains = [])).push({ name, sections, values: domainValues.length ? domainValues : undefined, endWhitespaces });
     return this;
   }
 
@@ -84,7 +85,7 @@ export class Reader {
       } else if (this.isToken('semicolon', ';')) {
         values.push([]);
       } else {
-        values.pop();
+        if (!values[values.length - 1].length) values.pop();
         break;
       }
     }
@@ -114,6 +115,12 @@ export class Reader {
         return { whitespace: this.parser.token.whitespace, value: this.parser.token.text, isPointer: true };
       }
       return { whitespace: this.parser.token.whitespace, value: +this.parser.token.text, isFloat: this.parser.token.text.includes('.') };
+    }
+    if (this.parser.token?.type === 'raw') {
+      return { whitespace: this.parser.token.whitespace, value: this.parser.token.text, isRaw: true };
+    }
+    if (this.parser.token?.type === 'geo') {
+      return { whitespace: this.parser.token.whitespace, value: this.parser.token.text, isGeo: true };
     }
   }
 
