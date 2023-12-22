@@ -5,4 +5,5 @@ export interface Domain {
   name: string;
   values?: Value[][];
   sections: Section[];
+  endWhitespaces?: string;
 }
