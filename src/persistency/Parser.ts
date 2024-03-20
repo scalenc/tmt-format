@@ -61,7 +61,7 @@ export class Parser {
 
       case Constants.StringDelimiter:
         this.readNextChar();
-        this.token = { whitespace, type: 'string', text: this.readUntil(Constants.StringDelimiter) };
+        this.token = { whitespace, type: 'string', text: this.readUntil(Constants.StringDelimiter, true) };
         this.assert(this.char === Constants.StringDelimiter, `Expected end of string`);
         this.readNextChar();
         return true;
@@ -112,9 +112,11 @@ export class Parser {
     return this.source.substring(i0, this.pos);
   }
 
-  private readUntil(delimiter: string): string {
+  private readUntil(delimiter: string, skipEscape = false): string {
     const i0 = this.pos;
-    while (this.char && this.char !== delimiter) {
+    let prev = this.char;
+    while (this.char && (this.char !== delimiter || (skipEscape && prev === '\\'))) {
+      prev = this.char;
       this.readNextChar();
     }
     return this.source.substring(i0, this.pos);
