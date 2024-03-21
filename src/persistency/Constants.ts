@@ -17,6 +17,7 @@ export const Constants = {
   SectionStart: '[',
   SectionEnd: ']',
   StringDelimiter: '"',
+  EscapeStringDelimiter: '\\',
   Domain: 'bereich',
   Header: 'Kopf',
   RawSections: defaultRawSections,
