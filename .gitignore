@@ -28,3 +28,5 @@ tf-outputs-prod.json
 
 dump
 /.idea/
+
+sbom.json
